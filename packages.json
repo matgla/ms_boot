@@ -1,0 +1,36 @@
+{
+    "dependencies": [
+        {
+            "link": "https://github.com/matgla/EmbeddedHAL.git",
+            "type": "git",
+            "version": "master",
+            "directory": "hal",
+            "target": "hal",
+            "options": {
+            }
+        },
+        {
+            "link": "https://github.com/matgla/EmbeddedUtilityLibraries.git",
+            "type": "git",
+            "version": "master",
+            "directory": "eul",
+            "target": "eul",
+            "options": {
+                "cmake_variables": {
+                    "DISABLE_TESTS": "ON",
+                    "DISABLE_SANITIZERS": "ON"
+                }
+            }
+        },
+        {
+            "link": "https://github.com/ulfalizer/Kconfiglib.git",
+            "type": "git",
+            "version": "v14.1.0",
+            "directory": "kconfig",
+            "target": "kconfig",
+            "options": {
+                "is_cmake_library": true
+            }
+        }
+    ]
+}
