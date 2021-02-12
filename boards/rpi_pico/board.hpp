@@ -18,8 +18,8 @@
 
 #include <hal/interfaces/usart.hpp> 
 
-#include <rpi_pico_gpio.hpp>
-#include <rpi_pico_usart.hpp>
+#include <rp2040_gpio.hpp>
+#include <rp2040_usart.hpp>
 
 namespace board 
 {

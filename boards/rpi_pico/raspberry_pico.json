@@ -1,0 +1,12 @@
+{
+	"info": {
+		"mcu": "rp2040"
+	},
+	"memory": {
+		"sections": {
+			"flash": {
+				"size": "128K"
+			}
+		}
+	}
+}

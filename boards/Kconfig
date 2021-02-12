@@ -18,12 +18,12 @@ menu "Hardware Platform configuration"
 
 choice
     prompt "MCU Family: "
-    default FAMILY_RASPBERRY_PICO
+    default FAMILY_RASPBERRY
 
-    config FAMILY_RASPBERRY_PICO
+    config FAMILY_RASPBERRY
     bool "Raspberry PICO"
     help
-        Enable support for Raspberry PICO.
+        Enable support for Raspberry boards.
 
 endchoice
 

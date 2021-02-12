@@ -31,34 +31,30 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(mspkg)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${mspkg_SOURCE_DIR}/cmake)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
+
+include (GenerateConfig)
+generate_config()
+
 include(mspkg) 
+
+set (user_boards_path ${PROJECT_SOURCE_DIR}/boards CACHE STRING "Path to boards provided from user")
 
 setup_mspkg(${mspkg_SOURCE_DIR})
 
 # KConfig settings
-set (ENV{srctree} ${PROJECT_SOURCE_DIR})
-set (ENV{BOARD_DIR} boards/**) 
-
-find_package(kconfig REQUIRED)
-
-message (STATUS "${Python3_EXECUTABLE}")
-
-set (ENV{srctree} ${PROJECT_SOURCE_DIR})
-set (ENV{BOARD_DIR} boards/**)
-
-
+file (GLOB config ${PROJECT_BINARY_DIR}/.config)
 if (NOT config)
     message (STATUS "Command: ${command}")
     execute_process(
-        COMMAND ${CMAKE_COMMAND} -E ${Python3_EXECUTABLE} #${kconfig_SOURCE_DIR}/menuconfig.py ${PROJECT_SOURCE_DIR}/Kconfig 
+        COMMAND ${CMAKE_COMMAND} -E env srctree=${PROJECT_SOURCE_DIR} BOARD_DIR=boards/** ${Python3_EXECUTABLE} ${PROJECT_SOURCE_DIR}/kconfig/kconfig/guiconfig.py ${PROJECT_SOURCE_DIR}/Kconfig 
         COMMAND_ERROR_IS_FATAL ANY
-        ENCODING NONE 
     )
 endif ()
 
 add_custom_target(menuconfig 
     COMMAND ${CMAKE_COMMAND} -E env srctree=${PROJECT_SOURCE_DIR} BOARD_DIR=boards/** ${Python3_EXECUTABLE}
-    ${kconfig_SOURCE_DIR}/menuconfig.py ${PROJECT_SOURCE_DIR}/Kconfig 
+    ${PROJECT_SOURCE_DIR}/kconfig/kconfig/menuconfig.py ${PROJECT_SOURCE_DIR}/Kconfig 
     VERBATIM 
 )
 

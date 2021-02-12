@@ -21,16 +21,6 @@
                     "DISABLE_SANITIZERS": "ON"
                 }
             }
-        },
-        {
-            "link": "https://github.com/ulfalizer/Kconfiglib.git",
-            "type": "git",
-            "version": "v14.1.0",
-            "directory": "kconfig",
-            "target": "kconfig",
-            "options": {
-                "is_cmake_library": true
-            }
         }
     ]
 }
