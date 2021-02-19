@@ -7,12 +7,18 @@ gitmodules:
 menuconfig: 
 	@echo "Opening kconfig menu"
 	( \
-	mkdir -p bin ;\
-	cd bin ;\
+	mkdir -p build;\
+	cd build;\
 	srctree=$(shell pwd) BOARD_DIR=boards/** $(shell pwd)/kconfig/kconfig/menuconfig.py Kconfig; \
 	cmake ..; \
 	)	
 
+.PHONY: build
+build: 
+	( \
+		cd build; \
+		make -j$(nproc); \
+	)
 
 clean: 
-	rm -rf bin
+	rm -rf build 
