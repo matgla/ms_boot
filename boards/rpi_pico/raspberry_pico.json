@@ -8,5 +8,9 @@
 				"size": "128K"
 			}
 		}
-	}
+	},
+    "linker_script": "pico.ld",
+    "definitions": {
+        "HAL_INCLUDE_PICO_RUNTIME": "ON" 
+    }
 }

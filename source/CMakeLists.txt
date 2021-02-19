@@ -16,14 +16,14 @@
 
 add_executable(msboot) 
 
+target_sources(msboot 
+    PUBLIC 
+        ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp 
+)
+
 target_link_libraries(msboot
     PRIVATE 
         hal 
-)
-
-set_target_properties(msboot 
-    PROPERTIES 
-        SUFFIX ".elf" 
 )
 
 include (GenerateBinary)

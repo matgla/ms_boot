@@ -14,29 +14,39 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include <cstdio>
+#pragma once 
 
-#include "board.hpp" 
+#include <cstdint>
 
-#include <hal/time/sleep.hpp>
-
-int main() 
+extern "C"
 {
-    board::gpio::LED().init(hal::gpio::Output::OpenDrain, hal::gpio::Speed::Default, hal::gpio::PullUpPullDown::None);
-
-    auto& usart = *board::interfaces::usarts()[0];
-    usart.init(115200);
-    while (true) {
-        board::gpio::LED().set_low(); 
-        usart.write("Hello\n");
-        hal::time::sleep(std::chrono::milliseconds(250));
-        board::gpio::LED().set_high();
-        usart.write("World\n");
-        uint8_t buf[2];
-        buf[1] = 0;
-        buf[0] = usart.read();     
-        usart.write(buf);
-        hal::time::sleep(std::chrono::milliseconds(250));
-    }
+#include <hardware/flash.h>
 }
+
+namespace msboot
+{
+
+class Connection 
+{
+public: 
+    Connection();
+
+    void run(const char c);
+
+    void on_start(void (*callback)());
+    void on_clear(void (*callback)());
+    void on_flash(void (*callback)());
+    void on_reset_to_picoboot(void (*callback)());
+    void on_boot(void (*callback)());
+private:
+    uint8_t buffer_[FLASH_PAGE_SIZE];
+
+    void (*on_start_)();
+    void (*on_clear_)();
+    void (*on_flash_)();
+    void (*on_reset_to_picoboot_)();
+    void (*on_boot_)();
+};
+
+} // namespace msboot 
 

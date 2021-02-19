@@ -14,29 +14,25 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include <cstdio>
+#pragma once 
 
-#include "board.hpp" 
+#include <cstdint>
 
-#include <hal/time/sleep.hpp>
+#include <span>
 
-int main() 
+namespace msboot 
 {
-    board::gpio::LED().init(hal::gpio::Output::OpenDrain, hal::gpio::Speed::Default, hal::gpio::PullUpPullDown::None);
 
-    auto& usart = *board::interfaces::usarts()[0];
-    usart.init(115200);
-    while (true) {
-        board::gpio::LED().set_low(); 
-        usart.write("Hello\n");
-        hal::time::sleep(std::chrono::milliseconds(250));
-        board::gpio::LED().set_high();
-        usart.write("World\n");
-        uint8_t buf[2];
-        buf[1] = 0;
-        buf[0] = usart.read();     
-        usart.write(buf);
-        hal::time::sleep(std::chrono::milliseconds(250));
-    }
-}
+class FirmwareLoader 
+{
+public:
+    FirmwareLoader(uint32_t flash_offset);
+
+    using DataType = std::span<const uint8_t>;
+    bool write_page(int page_number, const DataType& data);
+private: 
+    uint32_t flash_offset_;
+};
+
+} // namespace msboot 
 
