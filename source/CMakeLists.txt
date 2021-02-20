@@ -17,8 +17,13 @@
 add_executable(msboot) 
 
 target_sources(msboot 
-    PUBLIC 
+    PRIVATE 
+        ${CMAKE_CURRENT_SOURCE_DIR}/configuration.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/connection.hpp
+
         ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/configuration.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/connection.cpp
 )
 
 target_link_libraries(msboot

@@ -15,10 +15,16 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <cstdio>
+#include <cstdint>
+#include <chrono>
 
 #include "board.hpp" 
 
 #include <hal/time/sleep.hpp>
+#include <hal/reset/reset.hpp>
+
+#include "connection.hpp"
+
 
 int main() 
 {
@@ -26,17 +32,20 @@ int main()
 
     auto& usart = *board::interfaces::usarts()[0];
     usart.init(115200);
+    
+    msboot::Connection connection;
+    connection.on_boot([]{
+        auto& usart = *board::interfaces::usarts()[0];
+        usart.write("On boot\r\n");
+    });
+    connection.on_reset_to_vendor_bootloader([]{
+        auto& usart = *board::interfaces::usarts()[0];
+        usart.write("Reset to vendor bootloader\r\n");
+        hal::reset::reset(hal::reset::Type::vendor_bootloader);
+    });
     while (true) {
-        board::gpio::LED().set_low(); 
-        usart.write("Hello\n");
-        hal::time::sleep(std::chrono::milliseconds(250));
-        board::gpio::LED().set_high();
-        usart.write("World\n");
-        uint8_t buf[2];
-        buf[1] = 0;
-        buf[0] = usart.read();     
-        usart.write(buf);
-        hal::time::sleep(std::chrono::milliseconds(250));
+        char c = usart.read();     
+        connection.run(c);    
     }
 }
 

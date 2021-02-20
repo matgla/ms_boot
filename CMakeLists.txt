@@ -58,6 +58,8 @@ add_custom_target(menuconfig
     VERBATIM 
 )
 
+set (CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "" FORCE)
+
 # End of KConfig settings 
 message (STATUS "Configuring board: ${BOARD}")
 

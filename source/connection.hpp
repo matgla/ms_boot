@@ -18,11 +18,6 @@
 
 #include <cstdint>
 
-extern "C"
-{
-#include <hardware/flash.h>
-}
-
 namespace msboot
 {
 
@@ -36,10 +31,10 @@ public:
     void on_start(void (*callback)());
     void on_clear(void (*callback)());
     void on_flash(void (*callback)());
-    void on_reset_to_picoboot(void (*callback)());
+    void on_reset_to_vendor_bootloader(void (*callback)());
     void on_boot(void (*callback)());
 private:
-    uint8_t buffer_[FLASH_PAGE_SIZE];
+    //uint8_t buffer_[FLASH_PAGE_SIZE];
 
     void (*on_start_)();
     void (*on_clear_)();

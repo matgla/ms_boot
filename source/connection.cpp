@@ -16,7 +16,6 @@
 
 #include "connection.hpp"
 
-#include <cstdio>
 #include <unistd.h>
 
 namespace msboot 
@@ -53,7 +52,7 @@ void Connection::on_flash(void (*callback)())
     on_flash_ = callback;
 }
 
-void Connection::on_reset_to_picoboot(void (*callback)())
+void Connection::on_reset_to_vendor_bootloader(void (*callback)())
 {
     on_reset_to_picoboot_ = callback;
 }

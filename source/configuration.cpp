@@ -21,10 +21,10 @@
 
 #include <eul/crc/crc.hpp>
 
-extern "C" 
-{
-#include <hardware/flash.h>
-}
+//extern "C" 
+//{
+//#include <hardware/flash.h>
+//}
 
 namespace 
 {
@@ -77,37 +77,37 @@ ConfigurationWriter::ConfigurationWriter(const Configuration& configuration)
 
 void __no_inline_not_in_flash_func(clear_memory)(uint32_t address)
 {
-    flash_range_erase(address, FLASH_SECTOR_SIZE);
+    //flash_range_erase(address, FLASH_SECTOR_SIZE);
 }
 
 void __no_inline_not_in_flash_func(flash_memory)(uint32_t address, const uint8_t* test_data)
 {
-    flash_range_program(address, test_data, FLASH_PAGE_SIZE);
+    //flash_range_program(address, test_data, FLASH_PAGE_SIZE);
 }
 
 bool ConfigurationWriter::write(const uint32_t address)
 {
-    uint8_t test_data[FLASH_PAGE_SIZE];
-    std::memset(test_data, 0, FLASH_PAGE_SIZE);
-    std::memcpy(test_data, &configuration_, sizeof(ConfigurationEntry));
-    for (int i = 0; i < 10; i++ )
-    {
-        printf("%x ", test_data[i]);
-    }
-    printf(" \n");
-    printf("Erasing sector\n");
-    clear_memory(address);
-    printf("Program page\n");
-    flash_memory(address, test_data);
-    // flash_range_program(reinterpret_cast<uint32_t>(address), 
-        // test_data, 4); 
-    printf("Write configuration to: 0x%p\n", address);
-    printf("%d \n", *reinterpret_cast<uint32_t*>(XIP_BASE + address));
-    print_configuration(&configuration_.configuration);
+    //uint8_t test_data[FLASH_PAGE_SIZE];
+    //std::memset(test_data, 0, FLASH_PAGE_SIZE);
+    //std::memcpy(test_data, &configuration_, sizeof(ConfigurationEntry));
+    //for (int i = 0; i < 10; i++ )
+    //{
+    //    printf("%x ", test_data[i]);
+    //}
+    //printf(" \n");
+    //printf("Erasing sector\n");
+    //clear_memory(address);
+    //printf("Program page\n");
+    //flash_memory(address, test_data);
+    //// flash_range_program(reinterpret_cast<uint32_t>(address), 
+    //    // test_data, 4); 
+    //printf("Write configuration to: 0x%p\n", address);
+    //printf("%d \n", *reinterpret_cast<uint32_t*>(XIP_BASE + address));
+    //print_configuration(&configuration_.configuration);
 
-    printf("In memory: \n");
-    ConfigurationEntry* entry = reinterpret_cast<ConfigurationEntry*>(reinterpret_cast<uint32_t*>(XIP_BASE + address));
-    print_configuration(&entry->configuration);
+    //printf("In memory: \n");
+    //ConfigurationEntry* entry = reinterpret_cast<ConfigurationEntry*>(reinterpret_cast<uint32_t*>(XIP_BASE + address));
+    //print_configuration(&entry->configuration);
     return true;
 }
 

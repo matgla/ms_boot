@@ -16,6 +16,8 @@
 
 #pragma once 
 
+#include <array>
+
 #include <hal/interfaces/usart.hpp> 
 
 #include <rp2040_gpio.hpp>
