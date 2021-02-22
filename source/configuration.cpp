@@ -75,12 +75,12 @@ ConfigurationWriter::ConfigurationWriter(const Configuration& configuration)
     configuration_.configuration_crc = calculate_crc32(&configuration);
 }
 
-void __no_inline_not_in_flash_func(clear_memory)(uint32_t address)
+void clear_memory(uint32_t address)
 {
     //flash_range_erase(address, FLASH_SECTOR_SIZE);
 }
 
-void __no_inline_not_in_flash_func(flash_memory)(uint32_t address, const uint8_t* test_data)
+void flash_memory(uint32_t address, const uint8_t* test_data)
 {
     //flash_range_program(address, test_data, FLASH_PAGE_SIZE);
 }

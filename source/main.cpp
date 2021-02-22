@@ -25,7 +25,6 @@
 
 #include "connection.hpp"
 
-
 int main() 
 {
     board::gpio::LED().init(hal::gpio::Output::OpenDrain, hal::gpio::Speed::Default, hal::gpio::PullUpPullDown::None);

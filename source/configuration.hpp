@@ -18,8 +18,6 @@
 
 #include <cstdint>
 
-#include <pico/platform.h>
-
 namespace msboot
 {
 
@@ -52,7 +50,7 @@ private:
     Configuration* configuration_; 
 };
 
-void __no_inline_not_in_flash_func(write_configuration)(uint32_t address, const Configuration& data);
+void write_configuration(uint32_t address, const Configuration& data);
 
 class ConfigurationWriter
 {
