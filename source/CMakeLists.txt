@@ -20,10 +20,18 @@ target_sources(msboot
     PRIVATE 
         ${CMAKE_CURRENT_SOURCE_DIR}/configuration.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/connection.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/flasher.hpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/firmware_loader.hpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/printer.hpp
 
         ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp 
         ${CMAKE_CURRENT_SOURCE_DIR}/configuration.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/connection.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/flasher.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/firmware_loader.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/printer.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/functions.s
+        ${CMAKE_CURRENT_SOURCE_DIR}/blink.s
 )
 
 target_link_libraries(msboot

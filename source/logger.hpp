@@ -1,4 +1,4 @@
-// This file is part of MSBOOT project.
+// This file is part of msboot project.
 // Copyright (C) 2021 Mateusz Stadnik
 //
 // This program is free software: you can redistribute it and/or modify
@@ -16,26 +16,10 @@
 
 #pragma once 
 
-#include <cstdint>
-
-#include <span>
-
-#include <hal/memory/flash.hpp>
-
 namespace msboot 
 {
 
-class FirmwareLoader 
-{
-public:
-    FirmwareLoader(uint32_t flash_offset);
+class Logger
 
-    using DataType = std::span<const uint8_t>;
-    bool write_page(int page_number, const DataType& data);
-private: 
-    uint32_t flash_offset_;
-    hal::memory::Flash flash_;
-};
-
-} // namespace msboot 
+} // namespace msboot
 

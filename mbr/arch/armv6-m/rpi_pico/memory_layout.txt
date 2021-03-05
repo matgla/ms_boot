@@ -1,0 +1,22 @@
+[ 256 B ] -> RPI PICO 2nd stage bootloader  (1) 
+[ 190 B ] -> Bootstrap code                 (2) 
+[ 16  B ] -> Partition Entry 1 
+[ 16  B ] -> Partition Entry 2 
+[ 16  B ] -> Partition Entry 3 
+[ 16  B ] -> Partition Entry 4 
+[ 2   B ] -> Boot signature 0x55aa
+= [ 512 B ] 
+
+(1): initializes flash XIP and executes bootstrap code 
+(2): bootstrap code searches /boot parition and boot it 
+(3): in boot there should be msboot
+
+msboot: 
+    -> search valid system parition 
+    -> checks if someone is connected via UART/USB/VGA and KEYBOARD
+    -> if yes then provide interface to reflash 
+    -> provides some basic IO functionality 
+    -> boots OS 
+
+
+

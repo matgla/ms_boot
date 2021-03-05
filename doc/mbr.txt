@@ -1,0 +1,6 @@
+MSBoot contains multiple boot stages. 
+First one is placed in MBR of drive. 
+
+Booting sequence: 
+1) Vendor bootloader setup what's needed and boot MBR 
+2) MBR 

@@ -47,7 +47,7 @@ void Connection::on_clear(void (*callback)())
     on_clear_ = callback;
 }
 
-void Connection::on_flash(void (*callback)())
+void Connection::on_flash(void (*callback)(uint8_t))
 {
     on_flash_ = callback;
 }
@@ -84,7 +84,7 @@ void Connection::run(const char c)
         {
             if (on_flash_)
             {
-                on_flash_();
+                on_flash_(c);
             }
         } break; 
         case reset_to_picoboot: 

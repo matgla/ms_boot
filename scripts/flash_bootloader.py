@@ -25,9 +25,6 @@ import time
 
 def flash_firmware(args):
     print ("Flashing firmware")
-    drives = subprocess.check_output(["lsblk -O -J"], stderr=subprocess.PIPE, shell=True)
-
-    y = json.loads(drives)
 
     rc = subprocess.call(["mount " + args.mount], shell=True)
 
@@ -36,7 +33,8 @@ def flash_firmware(args):
         subprocess.call(["cd /mnt/rpi_pico && sync"], shell=True)
     else:
         print("Mouting failed")
-        return -1
+        time.sleep(1)
+        flash_firmware(args)
 
     while True:
         files = subprocess.check_output(["ls /mnt/rpi_pico"], stderr=subprocess.PIPE, shell=True)
@@ -49,8 +47,8 @@ def restart_to_bootloader(port, baudrate):
     print ("Restarting to bootloader")
     with serial.Serial(port, baudrate=baudrate) as ser:
         ser.write('q'.encode("utf-8"))
-        print(ser.readline())
-        time.sleep(5)
+        print(ser.readline().decode())
+
 
 parser = argparse.ArgumentParser(description="Script to flash Rasbperry PICO from command line")
 parser.add_argument("--mount", dest="mount",

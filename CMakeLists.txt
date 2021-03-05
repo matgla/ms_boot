@@ -69,3 +69,4 @@ enable_language(ASM C CXX)
 
 add_subdirectory(source)
 
+add_subdirectory(mbr/arch/armv6-m/rpi_pico)

@@ -58,10 +58,14 @@ with open(args.image, "rb") as file:
         line = ser.readline()
         print(line.decode('utf-8').replace('\n', ''))
 
+
+        line = ser.readline().decode('utf-8').replace('\n', '')
+        print (line) 
+        line = ser.readline().decode('utf-8').replace('\n', '')
+        print (line) 
+
         bytes_transmitted = 0
         while bytes_transmitted < len(array):
-            line = ser.readline().decode('utf-8').replace('\n', '')
-            print (line)
             bytes_to_send = 0
             if len(array) - bytes_transmitted < 256:
                 bytes_to_send = len(array) - bytes_transmitted
@@ -71,7 +75,8 @@ with open(args.image, "rb") as file:
                 array[
                     bytes_transmitted: bytes_transmitted +
                     bytes_to_send])
-            print("sending bytes: " + str(len(data)))
+            
+            print("sending bytes: " + str(len(data)) + " transmitted: " + str(bytes_transmitted))
             ser.write(data)
             bytes_transmitted = bytes_transmitted + bytes_to_send
             line = ser.readline().decode('utf-8').replace('\n', '')

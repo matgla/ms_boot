@@ -18,10 +18,9 @@
 
 #include <cstdio>
 
-extern "C"
-{
-#include <hardware/flash.h>
-}
+#include <hal/memory/flash.hpp>
+
+#include "flash_configuration.hpp"
 
 namespace msboot 
 {
@@ -33,20 +32,19 @@ FirmwareLoader::FirmwareLoader(uint32_t flash_offset)
 
 bool FirmwareLoader::write_page(int page_number, const DataType& data) 
 {
-    if (data.size() != FLASH_PAGE_SIZE)
+    if (data.size() != board::FlashParameters::page_size)
     {
         return false; 
     }
 
-    const uint32_t page_address = flash_offset_ + page_number * FLASH_PAGE_SIZE;
-    if (page_number * FLASH_PAGE_SIZE % FLASH_SECTOR_SIZE == 0)
+    const uint32_t page_address = flash_offset_ + page_number * board::FlashParameters::page_size;
+    if (page_number * board::FlashParameters::page_size % board::FlashParameters::sector_size == 0)
     {
-        flash_range_erase(page_address, FLASH_PAGE_SIZE);
-        printf("Erasing at 0x%x with size %d\n", page_address, FLASH_PAGE_SIZE);
+        
+        flash_.erase(page_address, board::FlashParameters::sector_size);
     }
-    printf("Program memory at 0x%x\n", page_address);
     
-    flash_range_program(page_address, data.data(), FLASH_PAGE_SIZE);
+    flash_.write(page_address, data);
     return true;
 }
 

@@ -14,28 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#pragma once 
+.syntax unified 
+.cpu cortex-m0plus 
+.thumb 
 
-#include <cstdint>
+.section .text 
 
-#include <span>
+.global _boot 
+.type _boot,%function 
+.thumb_func
+_boot: 
+    wfi 
+    b _boot
 
-#include <hal/memory/flash.hpp>
+.global literals 
+literals: 
+.ltorg
 
-namespace msboot 
-{
-
-class FirmwareLoader 
-{
-public:
-    FirmwareLoader(uint32_t flash_offset);
-
-    using DataType = std::span<const uint8_t>;
-    bool write_page(int page_number, const DataType& data);
-private: 
-    uint32_t flash_offset_;
-    hal::memory::Flash flash_;
-};
-
-} // namespace msboot 
-
+.end

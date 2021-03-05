@@ -218,5 +218,11 @@ SECTIONS
 
     ASSERT( __binary_info_header_end - __logical_binary_start <= 256, "Binary info must be in first 256 bytes of the binary")
     /* todo assert on extra code */
+
+    __app_start = ORIGIN(FLASH) + LENGTH(FLASH);
+    __app_offset = LENGTH(FLASH);
+
+    PROVIDE(_app_start = __app_start);
+    PROVIDE(_app_offset = __app_offset);
 }
 
