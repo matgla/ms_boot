@@ -10,3 +10,5 @@ SECTIONS {
         *(.text)
     } > FLASH 
 }
+
+PROVIDE(_msboot_start = ORIGIN(FLASH) + 0x100);

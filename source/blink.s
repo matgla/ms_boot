@@ -39,14 +39,12 @@
 
 .thumb_func
 blink: 
+    push {r5, r6, r7}
     ldr r7, =0x400140cc // Address of GPIO25 Control Block 
     ldr r6, [r7]        // Load register value 
     ldr r5, =0x00003300 // GPIO 25/Output
     orr r6, r6, r5 
     str r6, [r7]
+    pop {r5, r6, r7} 
+    bx lr
     
-    b loop 
-
-loop:
-    wfi 
-    b loop

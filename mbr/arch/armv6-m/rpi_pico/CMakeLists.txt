@@ -60,6 +60,11 @@ target_sources(mbr_boot
 target_link_options(mbr_boot PRIVATE "--specs=nosys.specs;-nostartfiles")
 target_link_options(mbr_boot PRIVATE "LINKER:--script=${CMAKE_CURRENT_SOURCE_DIR}/boot.ld")
 
+target_link_libraries(mbr_boot 
+    PRIVATE 
+        hardware_regs
+)
+
 set_target_properties(mbr_boot PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/boot.ld)
 
 set_target_properties(mbr_boot PROPERTIES COMPILE_DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/boot_prepare_flash.bin)
@@ -74,12 +79,14 @@ add_custom_command(
     TARGET mbr_boot 
     POST_BUILD
     COMMAND 
-    ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/append.py --input ${CMAKE_CURRENT_BINARY_DIR}/mbr_boot.bin
+    ${Python3_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/append.py --input ${CMAKE_CURRENT_BINARY_DIR}/mbr_boot.bin
     --output ${CMAKE_CURRENT_BINARY_DIR}/boot_bootstrap.bin --size 190
     
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/append.py mbr_prepare_flash ${CMAKE_CURRENT_SOURCE_DIR}/boot_prepare_flash.bin
+    DEPENDS ${PROJECT_SOURCE_DIR}/scripts/append.py mbr_prepare_flash ${CMAKE_CURRENT_SOURCE_DIR}/boot_prepare_flash.bin
     VERBATIM
 )
+
+set (FIRST_BOOTLOADER_BINARY ${CMAKE_CURRENT_BINARY_DIR}/boot.bin PARENT_SCOPE)
 
 add_custom_target(image 
     ALL 

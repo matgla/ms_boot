@@ -1,4 +1,4 @@
-// This file is part of MSBOOT project.
+// This file is part of msboot project.
 // Copyright (C) 2021 Mateusz Stadnik
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,28 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "hardware/regs/m0plus.h"
-#include "hardware/regs/addressmap.h"
+#pragma once 
 
-.syntax unified 
-.cpu cortex-m0plus 
-.thumb 
+#include <string_view>
 
-.section .text 
+void init_usart(int baudrate);
 
-.global _boot 
-.type _boot,%function 
-.thumb_func
-_boot: 
-    ldr r0, =(_msboot_start)
-    ldr r1, =(PPB_BASE + M0PLUS_VTOR_OFFSET)
-    str r0, [r1]
-    ldmia r0, {r0, r1} 
-    msr msp, r0
-    bx r1
-
-// .global literals 
-// literals: 
-// .ltorg
-
-.end
+void usart_puts(std::string_view data);

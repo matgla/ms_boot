@@ -14,30 +14,40 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+set (CMAKE_CXX_STANDARD 20)
+
 add_executable(msboot) 
+
+add_subdirectory(arch)
+
+target_link_libraries(msboot 
+    PRIVATE 
+        msboot_arch 
+        hal
+)
 
 target_sources(msboot 
     PRIVATE 
-        ${CMAKE_CURRENT_SOURCE_DIR}/configuration.hpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/connection.hpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/flasher.hpp 
-        ${CMAKE_CURRENT_SOURCE_DIR}/firmware_loader.hpp 
-        ${CMAKE_CURRENT_SOURCE_DIR}/printer.hpp
+#        ${CMAKE_CURRENT_SOURCE_DIR}/configuration.hpp
+#        ${CMAKE_CURRENT_SOURCE_DIR}/connection.hpp
+#        ${CMAKE_CURRENT_SOURCE_DIR}/flasher.hpp 
+#        ${CMAKE_CURRENT_SOURCE_DIR}/firmware_loader.hpp 
+#        ${CMAKE_CURRENT_SOURCE_DIR}/printer.hpp
 
         ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp 
-        ${CMAKE_CURRENT_SOURCE_DIR}/configuration.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/connection.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/flasher.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/firmware_loader.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/printer.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/functions.s
+#        ${CMAKE_CURRENT_SOURCE_DIR}/configuration.cpp
+#        ${CMAKE_CURRENT_SOURCE_DIR}/connection.cpp
+#        ${CMAKE_CURRENT_SOURCE_DIR}/flasher.cpp
+#        ${CMAKE_CURRENT_SOURCE_DIR}/firmware_loader.cpp
+#        ${CMAKE_CURRENT_SOURCE_DIR}/printer.cpp
+#        ${CMAKE_CURRENT_SOURCE_DIR}/functions.s
         ${CMAKE_CURRENT_SOURCE_DIR}/blink.s
 )
 
-target_link_libraries(msboot
-    PRIVATE 
-        hal 
-)
+#target_link_libraries(msboot
+#    PRIVATE 
+#        hal 
+#)
 
 include (GenerateBinary)
 generate_binary(msboot ${vendor})

@@ -78,7 +78,6 @@ ssi_reg .req r6
 .global _stage2_boot
 .type _stage2_boot,%function 
 pad_configuration:
-    bkpt 255
 set_sclk_pad_current:
     ldr pads_qspi_reg, =PADS_QSPI_BASE
     ldr r0, =PAD_OPTIONS_8MA_NO_SLEWFAST_LIMIT
