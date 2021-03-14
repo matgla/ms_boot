@@ -21,7 +21,6 @@ add_library(${library_name} STATIC)
 target_sources(${library_name}
     PUBLIC 
         ${CMAKE_CURRENT_SOURCE_DIR}/register_manipulator.hpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/vector_table.S 
         ${CMAKE_CURRENT_SOURCE_DIR}/system_init.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/clocks.hpp 
         ${CMAKE_CURRENT_SOURCE_DIR}/clocks.cpp
