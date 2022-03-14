@@ -71,15 +71,15 @@ add_subdirectory(source)
 
 add_subdirectory(mbr/arch/armv6-m/rpi_pico)
 
-get_property(msboot_binary TARGET msboot PROPERTY TARGET_FILE)
-add_custom_target(msboot_image 
-    ALL 
-    DEPENDS mbr_boot mbr_prepare_flash ${FIRST_BOOTLOADER_BINARY}
-    COMMAND
-        ${Python3_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/append.py --input ${FIRST_BOOTLOADER_BINARY} --output
-        first_boot.bin --size 512 
-    COMMAND
-    cat first_boot.bin $<TARGET_FILE:msboot>.bin > ${PROJECT_BINARY_DIR}/msboot.bin
-    VERBATIM 
-)
+# get_property(msboot_binary TARGET msboot PROPERTY TARGET_FILE)
+# add_custom_target(msboot_image 
+#     ALL 
+#     DEPENDS mbr_boot mbr_prepare_flash ${FIRST_BOOTLOADER_BINARY}
+#     COMMAND
+#         ${Python3_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/append.py --input ${FIRST_BOOTLOADER_BINARY} --output
+#         first_boot.bin --size 512 
+#     COMMAND
+#     cat first_boot.bin $<TARGET_FILE:msboot>.bin > ${PROJECT_BINARY_DIR}/msboot.bin
+#     VERBATIM 
+# )
 

@@ -16,33 +16,33 @@
 
 set (CMAKE_CXX_STANDARD 20)
 
-add_executable(msboot) 
+# add_executable(msboot) 
 
-add_subdirectory(arch)
+# add_subdirectory(arch)
 
-target_link_libraries(msboot 
-    PRIVATE 
-        msboot_arch 
-        hal
-)
+# target_link_libraries(msboot 
+#     PRIVATE 
+#         # msboot_arch 
+#         hal
+# )
 
-target_sources(msboot 
-    PRIVATE 
-#        ${CMAKE_CURRENT_SOURCE_DIR}/configuration.hpp
-#        ${CMAKE_CURRENT_SOURCE_DIR}/connection.hpp
-#        ${CMAKE_CURRENT_SOURCE_DIR}/flasher.hpp 
-#        ${CMAKE_CURRENT_SOURCE_DIR}/firmware_loader.hpp 
-#        ${CMAKE_CURRENT_SOURCE_DIR}/printer.hpp
+# target_sources(msboot 
+#     PRIVATE 
+# #        ${CMAKE_CURRENT_SOURCE_DIR}/configuration.hpp
+# #        ${CMAKE_CURRENT_SOURCE_DIR}/connection.hpp
+# #        ${CMAKE_CURRENT_SOURCE_DIR}/flasher.hpp 
+# #        ${CMAKE_CURRENT_SOURCE_DIR}/firmware_loader.hpp 
+# #        ${CMAKE_CURRENT_SOURCE_DIR}/printer.hpp
 
-        ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp 
-#        ${CMAKE_CURRENT_SOURCE_DIR}/configuration.cpp
-#        ${CMAKE_CURRENT_SOURCE_DIR}/connection.cpp
-#        ${CMAKE_CURRENT_SOURCE_DIR}/flasher.cpp
-#        ${CMAKE_CURRENT_SOURCE_DIR}/firmware_loader.cpp
-#        ${CMAKE_CURRENT_SOURCE_DIR}/printer.cpp
-#        ${CMAKE_CURRENT_SOURCE_DIR}/functions.s
-        ${CMAKE_CURRENT_SOURCE_DIR}/blink.s
-)
+#         ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp 
+# #        ${CMAKE_CURRENT_SOURCE_DIR}/configuration.cpp
+# #        ${CMAKE_CURRENT_SOURCE_DIR}/connection.cpp
+# #        ${CMAKE_CURRENT_SOURCE_DIR}/flasher.cpp
+# #        ${CMAKE_CURRENT_SOURCE_DIR}/firmware_loader.cpp
+# #        ${CMAKE_CURRENT_SOURCE_DIR}/printer.cpp
+# #        ${CMAKE_CURRENT_SOURCE_DIR}/functions.s
+#         ${CMAKE_CURRENT_SOURCE_DIR}/blink.s
+# )
 
 #target_link_libraries(msboot
 #    PRIVATE 
@@ -50,4 +50,19 @@ target_sources(msboot
 #)
 
 include (GenerateBinary)
-generate_binary(msboot ${vendor})
+# generate_binary(msboot ${vendor})
+
+add_executable(hello
+    ${CMAKE_CURRENT_SOURCE_DIR}/test.cpp
+)
+
+target_link_libraries(hello 
+    PUBLIC
+        hal 
+        # msboot_arch
+)
+
+pico_enable_stdio_usb(hello 1)
+pico_enable_stdio_uart(hello 0)
+
+pico_add_extra_outputs(hello)
