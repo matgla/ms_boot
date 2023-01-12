@@ -23,24 +23,31 @@ find_package(Python3 COMPONENTS Interpreter)
 include(FetchContent) 
 
 FetchContent_Declare(
-    mspkg 
-    GIT_REPOSITORY https://github.com/matgla/mspkg.git 
+    yaspem 
+    GIT_REPOSITORY https://github.com/matgla/yaspem.git 
     GIT_TAG        master 
 )
 
-FetchContent_MakeAvailable(mspkg)
+FetchContent_MakeAvailable(yaspem)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${mspkg_SOURCE_DIR}/cmake)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${yaspem_SOURCE_DIR}/cmake)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 
 include (GenerateConfig)
 generate_config()
 
-include(mspkg) 
+include(yaspem) 
 
 set (user_boards_path ${PROJECT_SOURCE_DIR}/boards CACHE STRING "Path to boards provided from user")
 
-setup_mspkg(${mspkg_SOURCE_DIR})
+include (GetPackageConfig)
+GetPackageConfig()
+
+setup_yaspem(
+    YASPEM_SOURCE ${yaspem_SOURCE_DIR}
+    OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/packages
+    PACKAGE_FILES ${PROJECT_SOURCE_DIR}/packages.json,${ARCH_PACKAGE_FILES}
+)
 
 # KConfig settings
 file (GLOB config ${PROJECT_BINARY_DIR}/.config)
@@ -62,8 +69,6 @@ set (CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "" FORCE)
 
 # End of KConfig settings 
 message (STATUS "Configuring board: ${BOARD}")
-
-find_package(hal REQUIRED)
 
 enable_language(ASM C CXX)
 

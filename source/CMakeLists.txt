@@ -49,8 +49,10 @@ set (CMAKE_CXX_STANDARD 20)
 #        hal 
 #)
 
-include (GenerateBinary)
+# include (GenerateBinary)
 # generate_binary(msboot ${vendor})
+
+find_package(pico_sdk REQUIRED)
 
 add_executable(hello
     ${CMAKE_CURRENT_SOURCE_DIR}/test.cpp

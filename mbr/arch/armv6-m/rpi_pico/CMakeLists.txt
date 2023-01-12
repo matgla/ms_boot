@@ -32,8 +32,8 @@ target_link_options(mbr_prepare_flash PRIVATE "LINKER:--script=${CMAKE_CURRENT_S
 set_target_properties(mbr_prepare_flash PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/boot.ld)
 
 set (clean_bin ON)
-include (GenerateBinary) 
-generate_binary(mbr_prepare_flash ${vendor})
+# include (GenerateBinary) 
+# generate_binary(mbr_prepare_flash ${vendor})
 
 find_package(Python3 COMPONENTS Interpreter REQUIRED)
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/append_checksum.py)
@@ -72,8 +72,8 @@ set_target_properties(mbr_boot PROPERTIES COMPILE_DEPENDS ${CMAKE_CURRENT_BINARY
 set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/boot_prepare_flash.bin PROPERTIES GENERATED TRUE)
 
 set (clean_bin ON)
-include (GenerateBinary) 
-generate_binary(mbr_boot ${vendor})
+# include (GenerateBinary) 
+# generate_binary(mbr_boot ${vendor})
 add_dependencies(mbr_boot mbr_prepare_flash)
 add_custom_command(
     TARGET mbr_boot 
