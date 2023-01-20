@@ -1,3 +1,3 @@
 function (GetPackageConfig)
-    set(ARCH_PACKAGE_FILES ${PROJECT_SOURCE_DIR}/source/hw/rp2040/packages.json PARENT_SCOPE)
+    set(ARCH_PACKAGE_FILES ${PROJECT_SOURCE_DIR}/cpu/${cpu_name}/packages.json PARENT_SCOPE)
 endfunction ()
