@@ -29,5 +29,5 @@ function(process_hw_configuration_file)
       ${PROJECT_SOURCE_DIR}/cpu/${cpu_name}/cmake
       PARENT_SCOPE)
 
-  include(${PROJECT_SOURCE_DIR}/cpu/${cpu_name}/Platform/${cpu_name}.cmake)
+  include(${PROJECT_SOURCE_DIR}/cpu/${cpu_name}/cmake/Platform/${cpu_name}.cmake)
 endfunction()

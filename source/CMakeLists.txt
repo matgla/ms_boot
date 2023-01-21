@@ -39,9 +39,9 @@ set(CMAKE_CXX_STANDARD 20)
 
 # include (GenerateBinary) generate_binary(msboot ${vendor})
 
-find_package(pico_sdk REQUIRED)
-
 add_executable(hello main.cpp)
+
+message (STATUS "${CMAKE_EXE_LINKER_FLAGS} nad he")
 
 target_link_libraries(hello PUBLIC pico_stdlib arch_flags)
 

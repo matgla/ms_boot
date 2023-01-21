@@ -15,8 +15,6 @@
 
 cmake_minimum_required(VERSION 3.19)
 
-project(ms_boot NONE)
-
 find_package(Python3 COMPONENTS Interpreter)
 
 include(FetchContent)
@@ -31,27 +29,10 @@ FetchContent_MakeAvailable(yaspem)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${yaspem_SOURCE_DIR}/cmake)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 
-include(GenerateConfig)
-generate_config()
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/GenerateConfig.cmake)
+generate_config(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
 # KConfig settings
-file(GLOB config ${PROJECT_BINARY_DIR}/.config)
-if(NOT config)
-  message(STATUS "Command: ${command}")
-  execute_process(
-    COMMAND
-      ${CMAKE_COMMAND} -E env srctree=${PROJECT_SOURCE_DIR} BOARD_DIR=boards/**
-      ${Python3_EXECUTABLE} ${PROJECT_SOURCE_DIR}/kconfig/kconfig/guiconfig.py
-      ${PROJECT_SOURCE_DIR}/Kconfig COMMAND_ERROR_IS_FATAL ANY)
-endif()
-
-add_custom_target(
-  menuconfig
-  COMMAND
-    ${CMAKE_COMMAND} -E env srctree=${PROJECT_SOURCE_DIR} BOARD_DIR=boards/**
-    ${Python3_EXECUTABLE} ${PROJECT_SOURCE_DIR}/kconfig/kconfig/menuconfig.py
-    ${PROJECT_SOURCE_DIR}/Kconfig
-  VERBATIM)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS
     ON
@@ -59,14 +40,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS
 
 # End of KConfig settings
 
-include(parse_hw_config)
+include(cmake/parse_hw_config.cmake)
 process_hw_configuration_file()
 message(STATUS "NN: ${CMAKE_MODULE_PATH}")
 include(yaspem)
-
-set(user_boards_path
-    ${PROJECT_SOURCE_DIR}/boards
-    CACHE STRING "Path to boards provided from user")
 
 include(GetPackageConfig)
 getpackageconfig()
@@ -76,10 +53,12 @@ setup_yaspem(
   ${CMAKE_CURRENT_BINARY_DIR}/packages PACKAGE_FILES
   ${PROJECT_SOURCE_DIR}/packages.json,${ARCH_PACKAGE_FILES})
 
-find_package(ArmToolchain REQUIRED)
+# find_package(ArmToolchain REQUIRED)
 find_package(rp2040 REQUIRED)
 
-enable_language(ASM C CXX)
+message(STATUS "-----------------------------------------")
+
+project(ms_boot ASM C CXX)
 
 add_subdirectory(source)
 # add_subdirectory(mbr/arch/armv6-m/rpi_pico)
