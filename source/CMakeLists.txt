@@ -41,11 +41,9 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_executable(hello main.cpp)
 
-message (STATUS "${CMAKE_EXE_LINKER_FLAGS} nad he")
+target_link_libraries(hello PUBLIC pico_stdlib)
 
-target_link_libraries(hello PUBLIC pico_stdlib arch_flags)
-
-pico_enable_stdio_usb(hello 1)
-pico_enable_stdio_uart(hello 0)
+pico_enable_stdio_usb(hello 0)
+pico_enable_stdio_uart(hello 1)
 
 pico_add_extra_outputs(hello)

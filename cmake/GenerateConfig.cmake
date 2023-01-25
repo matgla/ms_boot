@@ -23,7 +23,7 @@ function (generate_config source_directory output_directory)
         GENERATED TRUE
     )
 
-  file(GLOB config ${PROJECT_BINARY_DIR}/.config)
+  file(GLOB config ${output_directory}/.config)
   if(NOT config)
     message(STATUS "Command: ${command}")
     execute_process(

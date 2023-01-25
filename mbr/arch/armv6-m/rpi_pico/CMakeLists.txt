@@ -31,10 +31,6 @@ target_link_options(mbr_prepare_flash PRIVATE "LINKER:--script=${CMAKE_CURRENT_S
 
 set_target_properties(mbr_prepare_flash PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/boot.ld)
 
-set (clean_bin ON)
-# include (GenerateBinary) 
-# generate_binary(mbr_prepare_flash ${vendor})
-
 find_package(Python3 COMPONENTS Interpreter REQUIRED)
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/append_checksum.py)
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/make_uf2.py)
@@ -43,9 +39,10 @@ add_custom_command(
     TARGET mbr_prepare_flash  
     POST_BUILD
     COMMAND 
+      ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:mbr_prepare_flash> mbr_prepare_flash.bin
+    COMMAND 
     ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/append_checksum.py --input
     ${CMAKE_CURRENT_BINARY_DIR}/mbr_prepare_flash.bin --output ${CMAKE_CURRENT_BINARY_DIR}/boot_prepare_flash.bin
-    COMMAND
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/append_checksum.py
     VERBATIM
 )
@@ -79,6 +76,8 @@ add_custom_command(
     TARGET mbr_boot 
     POST_BUILD
     COMMAND 
+      ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:mbr_boot> mbr_boot.bin
+    COMMAND 
     ${Python3_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/append.py --input ${CMAKE_CURRENT_BINARY_DIR}/mbr_boot.bin
     --output ${CMAKE_CURRENT_BINARY_DIR}/boot_bootstrap.bin --size 190
     
@@ -86,13 +85,15 @@ add_custom_command(
     VERBATIM
 )
 
-set (FIRST_BOOTLOADER_BINARY ${CMAKE_CURRENT_BINARY_DIR}/boot.bin PARENT_SCOPE)
-
 add_custom_target(image 
     ALL 
     DEPENDS mbr_boot mbr_prepare_flash
     COMMAND
-        cat boot_prepare_flash.bin boot_bootstrap.bin > boot.bin
+      cat boot_prepare_flash.bin boot_bootstrap.bin > boot.bin
+    COMMAND
+      ${PROJECT_SOURCE_DIR}/scripts/append.py --input boot.bin --output mbr.bin --size 512 
     VERBATIM 
 )
+
+set (mbr_binary_path ${CMAKE_CURRENT_BINARY_DIR}/mbr.bin)
 

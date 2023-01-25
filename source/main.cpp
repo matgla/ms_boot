@@ -107,8 +107,8 @@
 // void blink();
 // }
 
+#include <cstdio>
 #include <pico/stdlib.h>
-#include <stdio.h>
 
 int main() {
   // board::gpio::LED().init(hal::gpio::Output::OpenDrain,
@@ -119,5 +119,7 @@ int main() {
   // usart_puts("Hello world\r\n");
   stdio_init_all();
   while (true) {
+    printf("Hello world\n");
+    sleep_ms(1000);
   }
 }

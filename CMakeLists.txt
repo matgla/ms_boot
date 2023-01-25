@@ -1,4 +1,5 @@
-# This file is part of ms_boot project. Copyright (C) 2023 Mateusz Stadnik
+# This file is part of ms_boot project. 
+# Copyright (C) 2023 Mateusz Stadnik
 #
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -27,41 +28,28 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(yaspem)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${yaspem_SOURCE_DIR}/cmake)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/GenerateConfig.cmake)
 generate_config(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
-
-# KConfig settings
-
-set(CMAKE_EXPORT_COMPILE_COMMANDS
-    ON
-    CACHE INTERNAL "" FORCE)
-
-# End of KConfig settings
-
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 include(cmake/parse_hw_config.cmake)
-process_hw_configuration_file()
-message(STATUS "NN: ${CMAKE_MODULE_PATH}")
-include(yaspem)
+process_hw_configuration_file(${CMAKE_CURRENT_SOURCE_DIR})
 
-include(GetPackageConfig)
-getpackageconfig()
+include(yaspem)
 
 setup_yaspem(
   YASPEM_SOURCE ${yaspem_SOURCE_DIR} OUTPUT_DIRECTORY
   ${CMAKE_CURRENT_BINARY_DIR}/packages PACKAGE_FILES
-  ${PROJECT_SOURCE_DIR}/packages.json,${ARCH_PACKAGE_FILES})
+  ${CMAKE_CURRENT_SOURCE_DIR}/packages.json,${CMAKE_CURRENT_SOURCE_DIR}/cpu/${cpu_name}/packages.json)
 
-# find_package(ArmToolchain REQUIRED)
-find_package(rp2040 REQUIRED)
-
-message(STATUS "-----------------------------------------")
+find_package(${cpu_name} REQUIRED)
 
 project(ms_boot ASM C CXX)
 
+initialize_cpu()
+
 add_subdirectory(source)
-# add_subdirectory(mbr/arch/armv6-m/rpi_pico)
 
 execute_process(
   COMMAND
@@ -69,9 +57,14 @@ execute_process(
     ${CMAKE_BINARY_DIR}/compile_commands.json
     ${PROJECT_SOURCE_DIR}/compile_commands.json)
 
-# get_property(msboot_binary TARGET msboot PROPERTY TARGET_FILE)
-# add_custom_target(msboot_image ALL DEPENDS mbr_boot mbr_prepare_flash
-# ${FIRST_BOOTLOADER_BINARY} COMMAND ${Python3_EXECUTABLE}
-# ${PROJECT_SOURCE_DIR}/scripts/append.py --input ${FIRST_BOOTLOADER_BINARY}
-# --output first_boot.bin --size 512 COMMAND cat first_boot.bin
-# $<TARGET_FILE:msboot>.bin > ${PROJECT_BINARY_DIR}/msboot.bin VERBATIM )
+
+add_subdirectory(mbr/arch/armv6-m/rpi_pico)
+
+add_custom_target(msboot_image
+  ALL 
+  DEPENDS ${mbr_image_path}
+  COMMAND 
+  cat ${mbr_image_path} ${CMAKE_CURRENT_BINARY_DIR}/source/hello.bin > ${PROJECT_BINARY_DIR}/msboot.bin
+  VERBATIM
+)
+

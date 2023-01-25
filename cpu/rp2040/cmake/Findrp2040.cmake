@@ -22,11 +22,9 @@
 
 find_package(pico_sdk REQUIRED)
 
-message (STATUS "${CMAKE_MODULE_PATH}")
-
-
 include (pico_sdk_init)
-pico_sdk_init()
 
-message (STATUS "FLAGS: ${CMAKE_EXE_LINKER_FLAGS}")
+function (initialize_cpu)
+  pico_sdk_init()
+endfunction ()
 

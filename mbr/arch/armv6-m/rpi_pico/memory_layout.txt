@@ -1,9 +1,9 @@
 [ 256 B ] -> RPI PICO 2nd stage bootloader  (1) 
-[ 190 B ] -> Bootstrap code                 (2) 
-[ 16  B ] -> Partition Entry 1 
-[ 16  B ] -> Partition Entry 2 
-[ 16  B ] -> Partition Entry 3 
-[ 16  B ] -> Partition Entry 4 
+[ 126 B ] -> Bootstrap code                 (2) 
+[ 32  B ] -> Partition Entry 1 
+[ 32  B ] -> Partition Entry 2 
+[ 32  B ] -> Partition Entry 3 
+[ 32  B ] -> Partition Entry 4 
 [ 2   B ] -> Boot signature 0x55aa
 = [ 512 B ] 
 
