@@ -29,7 +29,7 @@ target_link_libraries(mbr_prepare_flash
 target_link_options(mbr_prepare_flash PRIVATE "--specs=nosys.specs;-nostartfiles")
 target_link_options(mbr_prepare_flash PRIVATE "LINKER:--script=${CMAKE_CURRENT_SOURCE_DIR}/boot_prepare_flash.ld")
 
-set_target_properties(mbr_prepare_flash PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/boot.ld)
+set_target_properties(mbr_prepare_flash PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/boot_prepare_flash.ld)
 
 find_package(Python3 COMPONENTS Interpreter REQUIRED)
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/append_checksum.py)
@@ -95,5 +95,5 @@ add_custom_target(image
     VERBATIM 
 )
 
-set (mbr_binary_path ${CMAKE_CURRENT_BINARY_DIR}/mbr.bin)
+set (mbr_binary_path ${CMAKE_CURRENT_BINARY_DIR}/mbr.bin CACHE INTERNAL "")
 

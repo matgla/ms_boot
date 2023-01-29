@@ -19,30 +19,21 @@
 
 #include "clocks.hpp"
 
-extern "C" 
+extern "C"
 {
+  void system_init()
+  {
+    reset_block(~(RESETS_RESET_IO_QSPI_BITS | RESETS_RESET_PADS_QSPI_BITS |
+                  RESETS_RESET_PLL_USB_BITS | RESETS_RESET_PLL_SYS_BITS));
 
-void system_init() 
-{
-    reset_block(~(
-        RESETS_RESET_IO_QSPI_BITS   |
-        RESETS_RESET_PADS_QSPI_BITS |
-        RESETS_RESET_PLL_USB_BITS   |
-        RESETS_RESET_PLL_SYS_BITS));
+    unreset_block_wait(RESETS_RESET_BITS &
+                       ~(RESETS_RESET_ADC_BITS | RESETS_RESET_RTC_BITS |
+                         RESETS_RESET_SPI0_BITS | RESETS_RESET_SPI1_BITS |
+                         RESETS_RESET_UART0_BITS | RESETS_RESET_UART1_BITS |
+                         RESETS_RESET_USBCTRL_BITS));
 
-    unreset_block_wait(RESETS_RESET_BITS & ~(
-        RESETS_RESET_ADC_BITS |
-        RESETS_RESET_RTC_BITS |
-        RESETS_RESET_SPI0_BITS | 
-        RESETS_RESET_SPI1_BITS |
-        RESETS_RESET_UART0_BITS |
-        RESETS_RESET_UART1_BITS |
-        RESETS_RESET_USBCTRL_BITS 
-    ));
-
-    clocks_init();
+    // clocks_init();
 
     unreset_block_wait(RESETS_RESET_BITS);
-}
-
+  }
 }

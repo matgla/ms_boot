@@ -14,33 +14,51 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-set (library_name msboot_${arch_version}_${mcu})
+set (library_name msboot_rp2040)
 
 add_library(${library_name} STATIC)
 
 target_sources(${library_name}
     PUBLIC 
         ${CMAKE_CURRENT_SOURCE_DIR}/register_manipulator.hpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/system_init.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/clocks.hpp 
-        ${CMAKE_CURRENT_SOURCE_DIR}/clocks.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/usart.hpp 
+        #PRIVATE 
+        ${CMAKE_CURRENT_SOURCE_DIR}/system_init.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/clocks.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/usart.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/syscalls.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/crt0.S
 )
 
-target_link_options(${library_name} PUBLIC "--specs=nano.specs")
+target_compile_options(${library_name}
+  PUBLIC
+    -fno-exceptions
+    -fno-rtti
+    -Os
+    -ffunction-sections
+    -fdata-sections
+    -fno-threadsafe-statics
+    -fno-use-cxa-atexit
+    -fno-common
+)
 
+target_link_options(${library_name}
+  PUBLIC
+     -flto
+     -Wl,--gc-sections
+)
+target_link_options(${library_name} PUBLIC "--specs=nano.specs;-nostartfiles")
 target_link_options(${library_name} PUBLIC "LINKER:--script=${CMAKE_CURRENT_SOURCE_DIR}/linker_script.ld")
 
 set_target_properties(${library_name} PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/linker_script.ld)
 
-
 target_link_libraries(${library_name} 
-    PUBLIC 
-        hardware_regs
-        hardware_structs
-        hardware_resets
+  PUBLIC 
+    hardware_regs
+    hardware_structs
+    hardware_resets
+    pico_bootrom
 )
 
-
-
+target_include_directories(${library_name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

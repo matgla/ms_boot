@@ -14,10 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#pragma once 
+#pragma once
 
+#include <cstdint>
 #include <string_view>
-
+namespace arch
+{
 void init_usart(int baudrate);
 
 void usart_puts(std::string_view data);
+uint32_t usart_read();
+
+}  // namespace arch

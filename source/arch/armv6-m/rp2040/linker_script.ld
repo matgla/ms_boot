@@ -1,88 +1,59 @@
+/* linker_script.ld  
+ * 
+ * Copyright (C) 2023 Mateusz Stadnik <matgla@live.com>
+ * 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, either version
+ * 3 of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General
+ * Public License along with this program. If not, see
+ * <https://www.gnu.org/licenses/>.
+*/
+
 MEMORY {
-    FLASH(rx) : ORIGIN = 0x10000200, LENGTH = 12K
-    RAM(rwx)  : ORIGIN = 0x20000000, LENGTH = 128K 
+  mbr(rx)     : ORIGIN = 0x10000000, LENGTH = 0x200 
+  bootrom(rx) : ORIGIN = 0x10000200, LENGTH = 0x1000
+  ram(rwx)    : ORIGIN = 0x20000000, LENGTH = 256k
 }
 
+__bootrom_start__ = ORIGIN(bootrom);
+__bootrom_size__ = LENGTH(bootrom);
+
 SECTIONS {
-    . = ORIGIN(FLASH);
-    .vector_table : {
-        KEEP (*(.vector_table))
-        . = ALIGN(4);
-    } > FLASH
-    .text : {
-        . = ALIGN(4);
-        _stext = .;
-        *(.text*)
-        *(.glue_7) 
-        *(.glue_7t)
-        *(.eh_frame*) 
-        KEEP (*(.reset_section))
-        KEEP(*(.init))
-        KEEP(*(.fini))
-        . = ALIGN(4);
-        _etext = .;
-    } > FLASH
+  .text : {
+    KEEP(*(.vectors))
+    KEEP(*(.reset))
+    *(.text*)
+  } > bootrom 
 
-    .rodata : {
-        . = ALIGN(4); 
-        *(.rodata*) 
-        . = ALIGN(4);
-    } > FLASH 
+  .rodata : {
+    *(.rodata*)
+    . = ALIGN(4);
+    __rodata_end__ = .; 
+  } > bootrom 
 
-    .ARM.extab : {
-        *(.ARM.extab*)
-    } > FLASH 
+  .data : {
+    __data_start__ = .;
+    . = ALIGN(4);
+    *(.data*)
+    . = ALIGN(4);
+    __data_end__ = .;
+  } > ram AT> bootrom
 
-    .ARM.exidx : {
-        *(.ARM.exidx*)
-    } > FLASH 
-
-    .preinit_array : {
-        PROVIDE_HIDDEN(__preinit_array_start = .);
-        KEEP(*(.preinit_array*));
-        PROVIDE_HIDDEN(__preinit_array_end = .);
-    } > FLASH
-
-    .init_array : {
-        PROVIDE_HIDDEN(__init_array_start = .);
-        KEEP(*(SORT(.init_array.*)))
-        KEEP(*(.init_array*)) 
-        PROVIDE_HIDDEN(__init_array_end = .);
-    } > FLASH 
-
-    .fini_array : {
-        PROVIDE_HIDDEN(__fini_array_start = .);
-        KEEP(*(.fini_array*))
-        KEEP(*(SORT(.fini_array.*)))
-        PROVIDE_HIDDEN(__fini_array_end = .);
-    } > FLASH 
-   
-    _sidata = .; 
-    .data : AT(_sidata) {
-        . = ALIGN(4);
-        _sdata = .;
-        *(.data) 
-        *(.data*) 
-        _edata = .;
-        . = ALIGN(4);
-    } > RAM 
-
-    .bss : {
-        _sbss = .; 
-        __bss_start__ = _sbss; 
-        *(.bss) 
-        *(.bss*) 
-        *(COMMON) 
-        . = ALIGN(4);
-        _ebss = .;
-        __bss_end__ = _ebss;
-    } > RAM
-    
-    /DISCARD/ : 
-    {
-        libc.a (*) 
-        libm.a (*) 
-        libgcc.a (*)
-    }
-    _stack_top = ORIGIN(RAM) + LENGTH(RAM);
+  .bss : {
+    . = ALIGN(4);
+    __bss_start__ = .;
+    *(SORT_BY_ALIGNMENT(SORT_BY_NAME(.bss*)))
+    *(COMMON)
+    . = ALIGN(4);
+    __bss_end__ = .;
+  } > ram
+  _stack_top = ORIGIN(ram) + LENGTH(ram);
 }

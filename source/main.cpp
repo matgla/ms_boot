@@ -107,19 +107,28 @@
 // void blink();
 // }
 
-#include <cstdio>
-#include <pico/stdlib.h>
+#include <stdio.h>
 
-int main() {
+#include <cstdio>
+
+#include <usart.hpp>
+extern "C"
+{
+  void blink();
+}
+int main()
+{
   // board::gpio::LED().init(hal::gpio::Output::OpenDrain,
   // hal::gpio::Speed::Default, hal::gpio::PullUpPullDown::None);
-
   // board::gpio::LED().set_high();
   // init_usart(115200);
   // usart_puts("Hello world\r\n");
-  stdio_init_all();
-  while (true) {
-    printf("Hello world\n");
-    sleep_ms(1000);
+  // __attribute__((section(";.bss"))) static int baudrate;
+  //  usart_puts("Hello world\r\n");
+  //  stdio_init_all();
+  blink();
+  while (true)
+  {
+    //   printf("MSBOOT is alive\n");
   }
 }

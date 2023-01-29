@@ -39,11 +39,22 @@ set(CMAKE_CXX_STANDARD 20)
 
 # include (GenerateBinary) generate_binary(msboot ${vendor})
 
-add_executable(hello main.cpp)
+add_executable(hello blink.s main.cpp)
 
-target_link_libraries(hello PUBLIC pico_stdlib)
+add_subdirectory(arch/armv6-m/rp2040)
 
-pico_enable_stdio_usb(hello 0)
-pico_enable_stdio_uart(hello 1)
+target_link_libraries(hello msboot_rp2040)
+
+#pico_enable_stdio_usb(hello 0)
+#pico_enable_stdio_uart(hello 1)
 
 pico_add_extra_outputs(hello)
+
+if (${cpu_type} STREQUAL "arm")
+  add_custom_target(hello_size ALL
+    COMMAND arm-none-eabi-size $<TARGET_FILE:hello>
+    DEPENDS hello
+  )
+endif()
+
+

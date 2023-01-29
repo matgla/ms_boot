@@ -1,0 +1,12 @@
+---
+BasedOnStyle: Chromium 
+TabWidth: 4
+
+AllowShortBlocksOnASingleLine: 'false'
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: 'false'
+BreakBeforeBraces: Allman
+
+...
+

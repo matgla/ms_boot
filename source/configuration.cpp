@@ -16,99 +16,86 @@
 
 #include "configuration.hpp"
 
-#include <cstring>
 #include <cstdio>
-
+#include <cstring>
 #include <eul/crc/crc.hpp>
 
-//extern "C" 
+// extern "C"
 //{
-//#include <hardware/flash.h>
-//}
+// #include <hardware/flash.h>
+// }
 
-namespace 
-{
-void print_configuration(const msboot::Configuration* configuration)
-{
-    printf("Configuration:\n");
-    printf("  Firmware version: %d.%d\n", 
-        configuration->version_major, configuration->version_minor);
-    printf("  Firmware address: 0x%x\n", configuration->firmware_address);
-    printf("  Firmware size:    0x%x\n", configuration->firmware_size);
-    printf("  Firmware CRC:     0x%x\n", configuration->firmware_crc);
+namespace {
+void print_configuration(const msboot::Configuration *configuration) {
+  printf("Configuration:\n");
+  printf("  Firmware version: %d.%d\n", configuration->version_major,
+         configuration->version_minor);
+  printf("  Firmware address: 0x%x\n", configuration->firmware_address);
+  printf("  Firmware size:    0x%x\n", configuration->firmware_size);
+  printf("  Firmware CRC:     0x%x\n", configuration->firmware_crc);
 }
 
+}  // namespace
+
+namespace msboot {
+
+bool ConfigurationLoader::load_from_memory(const uint32_t *address) {
+  memcpy(&configuration_entry_, address, sizeof(ConfigurationEntry));
+  configuration_ = &configuration_entry_.configuration;
+
+  crc_ = calculate_crc32(configuration_);
+
+  if (crc_ != configuration_entry_.configuration_crc) {
+    return false;
+  }
+
+  return true;
 }
 
-namespace msboot 
-{
+void ConfigurationLoader::print() const { print_configuration(configuration_); }
 
-bool ConfigurationLoader::load_from_memory(const uint32_t* address)
-{
-    memcpy(&configuration_entry_, address, sizeof(ConfigurationEntry));
-    configuration_ = &configuration_entry_.configuration;
-    
-    crc_ = calculate_crc32(configuration_);
-
-    if (crc_ != configuration_entry_.configuration_crc)
-    {
-        return false;
-    }
-
-    return true;
+void ConfigurationLoader::print_crc() const {
+  printf("Readed CRC: 0x%x\n", configuration_entry_.configuration_crc);
+  printf("Calculated CRC: 0x%x\n", crc_);
 }
 
-void ConfigurationLoader::print() const 
-{
-    print_configuration(configuration_);
+ConfigurationWriter::ConfigurationWriter(const Configuration &configuration) {
+  configuration_.configuration = configuration;
+  configuration_.configuration_crc = calculate_crc32(&configuration);
 }
 
-void ConfigurationLoader::print_crc() const 
-{
-    printf("Readed CRC: 0x%x\n", configuration_entry_.configuration_crc);
-    printf("Calculated CRC: 0x%x\n", crc_);
+void clear_memory(uint32_t address) {
+  // flash_range_erase(address, FLASH_SECTOR_SIZE);
 }
 
-ConfigurationWriter::ConfigurationWriter(const Configuration& configuration)
-{
-    configuration_.configuration = configuration;
-    configuration_.configuration_crc = calculate_crc32(&configuration);
+void flash_memory(uint32_t address, const uint8_t *test_data) {
+  // flash_range_program(address, test_data, FLASH_PAGE_SIZE);
 }
 
-void clear_memory(uint32_t address)
-{
-    //flash_range_erase(address, FLASH_SECTOR_SIZE);
+bool ConfigurationWriter::write(const uint32_t address) {
+  // uint8_t test_data[FLASH_PAGE_SIZE];
+  // std::memset(test_data, 0, FLASH_PAGE_SIZE);
+  // std::memcpy(test_data, &configuration_, sizeof(ConfigurationEntry));
+  // for (int i = 0; i < 10; i++ )
+  //{
+  //     printf("%x ", test_data[i]);
+  // }
+  // printf(" \n");
+  // printf("Erasing sector\n");
+  // clear_memory(address);
+  // printf("Program page\n");
+  // flash_memory(address, test_data);
+  //// flash_range_program(reinterpret_cast<uint32_t>(address),
+  //    // test_data, 4);
+  // printf("Write configuration to: 0x%p\n", address);
+  // printf("%d \n", *reinterpret_cast<uint32_t*>(XIP_BASE + address));
+  // print_configuration(&configuration_.configuration);
+
+  // printf("In memory: \n");
+  // ConfigurationEntry* entry =
+  // reinterpret_cast<ConfigurationEntry*>(reinterpret_cast<uint32_t*>(XIP_BASE
+  // + address)); print_configuration(&entry->configuration);
+  return true;
 }
 
-void flash_memory(uint32_t address, const uint8_t* test_data)
-{
-    //flash_range_program(address, test_data, FLASH_PAGE_SIZE);
-}
-
-bool ConfigurationWriter::write(const uint32_t address)
-{
-    //uint8_t test_data[FLASH_PAGE_SIZE];
-    //std::memset(test_data, 0, FLASH_PAGE_SIZE);
-    //std::memcpy(test_data, &configuration_, sizeof(ConfigurationEntry));
-    //for (int i = 0; i < 10; i++ )
-    //{
-    //    printf("%x ", test_data[i]);
-    //}
-    //printf(" \n");
-    //printf("Erasing sector\n");
-    //clear_memory(address);
-    //printf("Program page\n");
-    //flash_memory(address, test_data);
-    //// flash_range_program(reinterpret_cast<uint32_t>(address), 
-    //    // test_data, 4); 
-    //printf("Write configuration to: 0x%p\n", address);
-    //printf("%d \n", *reinterpret_cast<uint32_t*>(XIP_BASE + address));
-    //print_configuration(&configuration_.configuration);
-
-    //printf("In memory: \n");
-    //ConfigurationEntry* entry = reinterpret_cast<ConfigurationEntry*>(reinterpret_cast<uint32_t*>(XIP_BASE + address));
-    //print_configuration(&entry->configuration);
-    return true;
-}
-
-} // namespace msbootk
+}  // namespace msboot

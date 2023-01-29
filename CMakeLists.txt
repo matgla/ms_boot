@@ -1,6 +1,5 @@
 # This file is part of ms_boot project. 
 # Copyright (C) 2023 Mateusz Stadnik
-#
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
 # Foundation, either version 3 of the License, or (at your option) any later
@@ -62,9 +61,9 @@ add_subdirectory(mbr/arch/armv6-m/rpi_pico)
 
 add_custom_target(msboot_image
   ALL 
-  DEPENDS ${mbr_image_path}
+  DEPENDS ${mbr_binary_path} hello 
   COMMAND 
-  cat ${mbr_image_path} ${CMAKE_CURRENT_BINARY_DIR}/source/hello.bin > ${PROJECT_BINARY_DIR}/msboot.bin
+  cat ${mbr_binary_path} ${CMAKE_CURRENT_BINARY_DIR}/source/hello.bin > ${PROJECT_BINARY_DIR}/msboot.bin
   VERBATIM
 )
 
